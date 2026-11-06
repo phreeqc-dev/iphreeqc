@@ -469,6 +469,15 @@ if (STANDALONE_BUILD)
     endif()
 
     add_subdirectory(gtest)
+
+    if(CMAKE_CXX_COMPILER_ID MATCHES "Clang" AND CMAKE_CXX_COMPILER_VERSION VERSION_GREATER_EQUAL "21")
+      message(STATUS "Disabling -Werror=character-conversion for gtest and gmock due to Clang 21+")
+      foreach(t gtest gtest_main gmock gmock_main)
+        if(TARGET ${t})
+          target_compile_options(${t} PRIVATE -Wno-error=character-conversion)
+        endif()
+      endforeach()
+    endif()
   endif()
 endif()
 
